@@ -670,6 +670,10 @@ class LlamaModel(LlamaPreTrainedModel):
                 else:
                     combined_attention_mask = (expanded_attn_mask[0] + combined_attention_mask, 
                                                expanded_attn_mask[1] + combined_attention_mask)
+                combined_attention_mask[0][combined_attention_mask[0] == -torch.inf] = torch.finfo(
+                    inputs_embeds.dtype).min
+                combined_attention_mask[1][combined_attention_mask[1] == -torch.inf] = torch.finfo(
+                    inputs_embeds.dtype).min
             else:
                 expanded_attn_mask = expanded_attn_mask.to(inputs_embeds.device)
                 combined_attention_mask = (
